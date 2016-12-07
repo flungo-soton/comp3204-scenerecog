@@ -2,3 +2,7 @@ target/
 /data/
 handin.zip
 run*.txt
+
+# JetBrain IDE files
+.idea/
+*.iml
