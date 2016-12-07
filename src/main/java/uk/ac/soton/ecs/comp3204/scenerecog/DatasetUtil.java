@@ -23,6 +23,7 @@ public final class DatasetUtil {
     public static final String TRAINING_DATASET = "training.zip!/training";
     public static final String TESTING_DATASET = "testing.zip!/testing";
 
+
     private URI directory;
 
     public DatasetUtil(URI directory) {
@@ -47,5 +48,4 @@ public final class DatasetUtil {
             return new DatasetUtil(new URI(REMOTE_DATASET_DIRECTORY));
         }
     }
-
 }
