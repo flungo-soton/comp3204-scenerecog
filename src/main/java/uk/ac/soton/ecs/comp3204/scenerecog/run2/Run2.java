@@ -10,6 +10,7 @@ import org.openimaj.image.DisplayUtilities;
 import org.openimaj.image.FImage;
 import org.openimaj.math.util.FloatArrayStatsUtils;
 import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
+import org.openimaj.ml.clustering.FloatCentroidsResult;
 import org.openimaj.ml.clustering.assignment.HardAssigner;
 import org.openimaj.ml.clustering.kmeans.FloatKMeans;
 import org.openimaj.util.pair.IntFloatPair;
@@ -48,9 +49,30 @@ public class Run2 {
     }
 
     static HardAssigner<float[], float[], IntFloatPair> trainQuantiser(VFSGroupDataset datasets) {
+        // Use for k means cluster
+        List<float[]> allPatches = new ArrayList<float[]>();
 
+        // From all images, pick 10 random patches.
+        Iterator itr = datasets.iterator();
+        Random random = new Random();
+        while (itr.hasNext()) {
+            FImage image = (FImage) itr.next();
+            List<float[]> patches = getPatches(image, 8, 4);
 
-        return null;
+            for (int i=0; i<10; i++) {
+                float[] patch = patches.get(random.nextInt(patches.size()));
+                allPatches.add(patch);
+            }
+        }
+
+        // Convert into float[][] so it can used for cluster
+        float[][] sample = allPatches.toArray(new float[allPatches.size()][]);
+
+        // Create 500 clusters
+        FloatKMeans km = FloatKMeans.createExact(500);
+        FloatCentroidsResult result = km.cluster(sample);
+
+        return result.defaultHardAssigner();
     }
 
     static class BoVWExtractor implements FeatureExtractor<DoubleFV, FImage> {
@@ -85,12 +107,14 @@ public class Run2 {
             for(int col=0; col<image.getWidth()-patchSize; col+=patchSize) {
                 FImage patch = image.extractROI(col, row, patchSize, patchSize);
 
+/*
                 // Mean-centring
                 float mean = FloatArrayStatsUtils.mean(image.pixels);
                 patch = patch.subtract(mean);
 
                 // Normalise
                 patch.normalise();
+*/
 
                 patches.add(patch.getFloatPixelVector());
             }
