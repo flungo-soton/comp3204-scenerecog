@@ -6,8 +6,9 @@ import org.openimaj.image.FImage;
 import org.openimaj.ml.annotation.Annotator;
 
 /**
+ * Abstract class to contain annotator.
  *
- * @param <A>
+ * @param <A> The type of Annotator that is created.
  */
 public abstract class AnnotatorWrapper<A extends Annotator> {
 

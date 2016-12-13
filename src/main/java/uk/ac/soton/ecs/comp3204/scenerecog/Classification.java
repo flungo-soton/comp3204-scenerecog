@@ -10,13 +10,15 @@ import org.openimaj.data.dataset.ListDataset;
 import org.openimaj.data.dataset.ReadableListDataset;
 import org.openimaj.data.identity.IdentifiableObject;
 import org.openimaj.image.FImage;
+import org.openimaj.ml.annotation.Annotator;
 import org.openimaj.ml.annotation.IncrementalAnnotator;
 
 /**
+ * Classify the dataset given and write the result in given file.
  *
  * @param <A> The type of annotator that is created.
  */
-public abstract class Classification<A extends IncrementalAnnotator<FImage, String>> implements Runnable {
+public abstract class Classification<A extends Annotator> implements Runnable {
 
     private static final Logger LOGGER = Logger.getLogger(Classification.class.getName());
 
@@ -54,17 +56,16 @@ public abstract class Classification<A extends IncrementalAnnotator<FImage, Stri
         }
     }
 
-    public abstract AnnotatorWrapper<A> getAnnotator();
+    public abstract AnnotatorWrapper<A> getAnnotatorWrapper();
 
     public GroupedDataset<String, ? extends Dataset<IdentifiableObject<FImage>>, IdentifiableObject<FImage>>
             trainAndClassify(
                     GroupedDataset<String, ? extends ListDataset<FImage>, FImage> training,
                     ReadableListDataset<FImage, ?> testing
             ) {
-        AnnotatorWrapper<A> annotatorWrapper = getAnnotator();
+        AnnotatorWrapper<A> annotatorWrapper = getAnnotatorWrapper();
         LOGGER.log(Level.FINE, "Training annotator");
         annotatorWrapper.train(training);
-        annotatorWrapper.getAnnotator().trainMultiClass(training);
 
         LOGGER.log(Level.FINE, "Classifying the test data");
         DatasetClassifier<String, FImage> classifier = new DatasetClassifier(annotatorWrapper.getAnnotator());

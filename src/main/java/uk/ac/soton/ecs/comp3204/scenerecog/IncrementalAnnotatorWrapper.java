@@ -6,7 +6,9 @@ import org.openimaj.image.FImage;
 import org.openimaj.ml.annotation.IncrementalAnnotator;
 
 /**
+ * Class use to contain IncrementalAnnotator.
  *
+ * @param <A> The type of IncrementalAnnotator that is created.
  */
 public class IncrementalAnnotatorWrapper<A extends IncrementalAnnotator> extends AnnotatorWrapper<A> {
 
