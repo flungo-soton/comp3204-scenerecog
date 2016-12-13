@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.experiment.evaluation.classification.analysers.confusionmatrix.CMResult;
 
+
 /**
  * Runner for the Scene Recognition coursework. This will run all 3 recognisers.
  */
@@ -26,6 +27,7 @@ public class App {
 
             LOGGER.log(Level.CONFIG, "Training dataset: {0}", datasets.getTraining());
             LOGGER.log(Level.CONFIG, "Testing dataset: {0}", datasets.getTesting());
+
         } catch (FileSystemException | URISyntaxException ex) {
             LOGGER.log(Level.SEVERE, "Exception loading datasets.", ex);
             return;

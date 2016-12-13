@@ -2,6 +2,7 @@ package uk.ac.soton.ecs.comp3204.scenerecog.run2;
 
 
 import de.bwaldvogel.liblinear.SolverType;
+import gov.sandia.cognition.learning.algorithm.clustering.hierarchy.BatchHierarchicalClusterer;
 import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.data.dataset.VFSGroupDataset;
 import org.openimaj.feature.DoubleFV;
@@ -16,6 +17,7 @@ import org.openimaj.ml.clustering.assignment.HardAssigner;
 import org.openimaj.ml.clustering.kmeans.FloatKMeans;
 import org.openimaj.util.pair.IntFloatPair;
 import uk.ac.soton.ecs.comp3204.scenerecog.App;
+import uk.ac.soton.ecs.comp3204.scenerecog.BatchAnnotatorWrapper;
 import uk.ac.soton.ecs.comp3204.scenerecog.Classification;
 import uk.ac.soton.ecs.comp3204.scenerecog.DatasetUtil;
 
@@ -42,13 +44,16 @@ public class Run2 extends Classification<LiblinearAnnotator<FImage, String>> {
     }
 
     @Override
-    public LiblinearAnnotator<FImage, String> getAnnotator() {
+    public BatchAnnotatorWrapper<LiblinearAnnotator<FImage, String>> getAnnotatorWrapper() {
         try {
 
             HardAssigner<float[], float[], IntFloatPair> assigner = trainQuantiser(datasets.getTraining());
             FeatureExtractor<DoubleFV, FImage> extractor = new BoVWExtractor(assigner, PATCHSIZE, PATCHSTEP);
-            return new LiblinearAnnotator<FImage, String>(
-                    extractor, LiblinearAnnotator.Mode.MULTICLASS, SolverType.L2R_L2LOSS_SVC, 1.0, 0.00001);
+            return new BatchAnnotatorWrapper<LiblinearAnnotator<FImage, String>>(
+                    new LiblinearAnnotator<FImage, String>(
+                            extractor, LiblinearAnnotator.Mode.MULTICLASS, SolverType.L2R_L2LOSS_SVC, 1.0, 0.00001
+                    )
+            );
 
         } catch (FileSystemException e) {
             e.printStackTrace();
