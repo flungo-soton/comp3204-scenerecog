@@ -54,19 +54,20 @@ public abstract class Classification<A extends IncrementalAnnotator<FImage, Stri
         }
     }
 
-    public abstract A getAnnotator();
+    public abstract AnnotatorWrapper<A> getAnnotator();
 
     public GroupedDataset<String, ? extends Dataset<IdentifiableObject<FImage>>, IdentifiableObject<FImage>>
             trainAndClassify(
                     GroupedDataset<String, ? extends ListDataset<FImage>, FImage> training,
                     ReadableListDataset<FImage, ?> testing
             ) {
-        A annotator = getAnnotator();
+        AnnotatorWrapper<A> annotatorWrapper = getAnnotator();
         LOGGER.log(Level.FINE, "Training annotator");
-        annotator.trainMultiClass(training);
+        annotatorWrapper.train(training);
+        annotatorWrapper.getAnnotator().trainMultiClass(training);
 
         LOGGER.log(Level.FINE, "Classifying the test data");
-        DatasetClassifier<String, FImage> classifier = new DatasetClassifier(annotator);
+        DatasetClassifier<String, FImage> classifier = new DatasetClassifier(annotatorWrapper.getAnnotator());
         return classifier.classifyIdentifiable(testing.toIdentifiable());
     }
 }
