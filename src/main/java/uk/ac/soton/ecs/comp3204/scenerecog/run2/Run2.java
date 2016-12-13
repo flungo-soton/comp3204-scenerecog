@@ -38,8 +38,7 @@ public class Run2 extends Classification<LiblinearAnnotator<FImage, String>> {
 
     DatasetUtil datasets;
 
-    public Run2(DatasetUtil dsUtil, String output) {
-        super(dsUtil, output);
+    public Run2(DatasetUtil dsUtil) {
         datasets = dsUtil;
     }
 

@@ -70,6 +70,7 @@ public class BoVWExtractor implements FeatureExtractor<DoubleFV, FImage> {
                 patch.normalise();
 */
 
+
                 patches.add(patch.getFloatPixelVector());
             }
         }

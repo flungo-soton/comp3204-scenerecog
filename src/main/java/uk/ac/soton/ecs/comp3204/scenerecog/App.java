@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.experiment.evaluation.classification.analysers.confusionmatrix.CMResult;
+import uk.ac.soton.ecs.comp3204.scenerecog.run2.Run2;
 
 
 /**
@@ -30,6 +31,13 @@ public class App {
 
         } catch (FileSystemException | URISyntaxException ex) {
             LOGGER.log(Level.SEVERE, "Exception loading datasets.", ex);
+            return;
+        }
+
+        try {
+            run(new Run2(datasets), "2", datasets);
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "IOException in Run 2.", e);
             return;
         }
     }
