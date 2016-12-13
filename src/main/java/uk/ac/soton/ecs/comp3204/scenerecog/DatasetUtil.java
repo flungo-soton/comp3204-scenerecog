@@ -19,7 +19,7 @@ public final class DatasetUtil {
     private static final Logger LOGGER = Logger.getLogger(DatasetUtil.class.getName());
     
     public static final String REMOTE_DATASET_DIRECTORY = "http://comp3204.ecs.soton.ac.uk/cw/";
-    public static final String TRAINING_DATASET = "training.zip";
+    public static final String TRAINING_DATASET = "training.zip!/training";
     public static final String TESTING_DATASET = "testing.zip";
     
     private URI directory;
