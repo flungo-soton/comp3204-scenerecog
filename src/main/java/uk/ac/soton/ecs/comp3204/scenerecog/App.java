@@ -32,8 +32,12 @@ public class App {
             LOGGER.log(Level.SEVERE, "Exception loading datasets.", ex);
             return;
         }
-        // Run, Run1
-        new Run1(1, datasets, "run1.txt").run(); // TODO: is K correct?
+        try {
+            // Run, Run1
+            run(new Run1(1), "1", datasets); // TODO: is K correct?
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "IOException running classification run 1", ex);
+        }
         try {
             run(new Run2(datasets), "2", datasets);
         } catch (IOException e) {

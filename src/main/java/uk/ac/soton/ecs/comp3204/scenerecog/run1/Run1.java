@@ -6,7 +6,6 @@ import org.openimaj.feature.FloatFVComparison;
 import org.openimaj.image.FImage;
 import org.openimaj.ml.annotation.basic.KNNAnnotator;
 import uk.ac.soton.ecs.comp3204.scenerecog.Classification;
-import uk.ac.soton.ecs.comp3204.scenerecog.DatasetUtil;
 import uk.ac.soton.ecs.comp3204.scenerecog.IncrementalAnnotatorWrapper;
 
 /**
@@ -20,14 +19,15 @@ public class Run1 extends Classification<KNNAnnotator<FImage, String, FloatFV>> 
 
     private int k;
 
-    public Run1(int k, DatasetUtil dsUtil, String output) {
-        super(dsUtil, output);
+    public Run1(int k) {
         this.k = k;
     }
 
     @Override
-    public IncrementalAnnotatorWrapper<KNNAnnotator<FImage, String, FloatFV>> getAnnotator() {
-        return new IncrementalAnnotatorWrapper<KNNAnnotator<FImage, String, FloatFV>>(new KNNAnnotator(new TinyImageExtractor(), FloatFVComparison.EUCLIDEAN, k));
+    public IncrementalAnnotatorWrapper<KNNAnnotator<FImage, String, FloatFV>> getAnnotatorWrapper() {
+        return new IncrementalAnnotatorWrapper<KNNAnnotator<FImage, String, FloatFV>>(
+                new KNNAnnotator(new TinyImageExtractor(), FloatFVComparison.EUCLIDEAN, k)
+        );
     }
 
 }
