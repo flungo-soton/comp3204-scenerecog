@@ -7,6 +7,7 @@ import org.openimaj.image.FImage;
 import org.openimaj.ml.annotation.basic.KNNAnnotator;
 import uk.ac.soton.ecs.comp3204.scenerecog.Classification;
 import uk.ac.soton.ecs.comp3204.scenerecog.DatasetUtil;
+import uk.ac.soton.ecs.comp3204.scenerecog.IncrementalAnnotatorWrapper;
 
 /**
  * Scene recognition classifier using KNN on tiny images.
@@ -25,8 +26,8 @@ public class Run1 extends Classification<KNNAnnotator<FImage, String, FloatFV>> 
     }
 
     @Override
-    public KNNAnnotator<FImage, String, FloatFV> getAnnotator() {
-        return new KNNAnnotator(new TinyImageExtractor(), FloatFVComparison.EUCLIDEAN, k);
+    public IncrementalAnnotatorWrapper<KNNAnnotator<FImage, String, FloatFV>> getAnnotator() {
+        return new IncrementalAnnotatorWrapper<KNNAnnotator<FImage, String, FloatFV>>(new KNNAnnotator(new TinyImageExtractor(), FloatFVComparison.EUCLIDEAN, k));
     }
 
 }
