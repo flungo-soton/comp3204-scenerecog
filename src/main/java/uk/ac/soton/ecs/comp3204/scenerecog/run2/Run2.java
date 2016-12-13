@@ -8,6 +8,7 @@ import org.openimaj.feature.DoubleFV;
 import org.openimaj.feature.FeatureExtractor;
 import org.openimaj.image.DisplayUtilities;
 import org.openimaj.image.FImage;
+import org.openimaj.image.feature.local.aggregate.BagOfVisualWords;
 import org.openimaj.math.util.FloatArrayStatsUtils;
 import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 import org.openimaj.ml.clustering.FloatCentroidsResult;
@@ -28,6 +29,9 @@ import java.util.logging.Logger;
 public class Run2 {
 
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
+
+    private static final int PATCHSIZE = 8;
+    private static final int PATCHSTEP = 4;
 
     public static void main(String[] args) {
         try {
@@ -57,7 +61,7 @@ public class Run2 {
         Random random = new Random();
         while (itr.hasNext()) {
             FImage image = (FImage) itr.next();
-            List<float[]> patches = getPatches(image, 8, 4);
+            List<float[]> patches = getPatches(image, PATCHSIZE, PATCHSTEP);
 
             for (int i=0; i<10; i++) {
                 float[] patch = patches.get(random.nextInt(patches.size()));
@@ -75,8 +79,12 @@ public class Run2 {
         return result.defaultHardAssigner();
     }
 
+    /**
+     * Get all the patches from one image as features
+     * Merge all the features into one
+     * Return this feature as the feature of the image
+     */
     static class BoVWExtractor implements FeatureExtractor<DoubleFV, FImage> {
-
         HardAssigner<float[], float[], IntFloatPair> assigner;
 
         public BoVWExtractor(HardAssigner<float[], float[], IntFloatPair> assigner) {
@@ -85,9 +93,11 @@ public class Run2 {
 
         @Override
         public DoubleFV extractFeature(FImage object) {
+            List<float[]> feature = getPatches(object, PATCHSIZE, PATCHSTEP);
 
-
-            return null;
+            BagOfVisualWords<float[]> bovw = new BagOfVisualWords<float[]>(this.assigner);
+            // Merge all the features into one
+            return bovw.aggregateVectorsRaw(feature).asDoubleFV();
         }
     }
 
