@@ -1,8 +1,8 @@
 package uk.ac.soton.ecs.comp3204.scenerecog.run1;
 
 import java.util.logging.Logger;
-import org.openimaj.feature.FloatFV;
-import org.openimaj.feature.FloatFVComparison;
+import org.openimaj.feature.DoubleFV;
+import org.openimaj.feature.DoubleFVComparison;
 import org.openimaj.image.FImage;
 import org.openimaj.ml.annotation.basic.KNNAnnotator;
 import uk.ac.soton.ecs.comp3204.scenerecog.Classification;
@@ -11,7 +11,7 @@ import uk.ac.soton.ecs.comp3204.scenerecog.IncrementalAnnotatorWrapper;
 /**
  * Scene recognition classifier using KNN on tiny images.
  */
-public class Run1 extends Classification<KNNAnnotator<FImage, String, FloatFV>> {
+public class Run1 extends Classification<KNNAnnotator<FImage, String, DoubleFV>> {
 
     private static final Logger LOGGER = Logger.getLogger(Run1.class.getName());
 
@@ -24,9 +24,9 @@ public class Run1 extends Classification<KNNAnnotator<FImage, String, FloatFV>> 
     }
 
     @Override
-    public IncrementalAnnotatorWrapper<KNNAnnotator<FImage, String, FloatFV>> getAnnotatorWrapper() {
-        return new IncrementalAnnotatorWrapper<KNNAnnotator<FImage, String, FloatFV>>(
-                new KNNAnnotator(new TinyImageExtractor(), FloatFVComparison.EUCLIDEAN, k)
+    public IncrementalAnnotatorWrapper<KNNAnnotator<FImage, String, DoubleFV>> getAnnotatorWrapper() {
+        return new IncrementalAnnotatorWrapper<KNNAnnotator<FImage, String, DoubleFV>>(
+                new KNNAnnotator(new TinyImageExtractor(), DoubleFVComparison.EUCLIDEAN, k)
         );
     }
 
