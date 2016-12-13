@@ -6,14 +6,21 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.data.dataset.VFSGroupDataset;
 import org.openimaj.feature.DoubleFV;
 import org.openimaj.feature.FeatureExtractor;
+import org.openimaj.image.DisplayUtilities;
 import org.openimaj.image.FImage;
+import org.openimaj.math.util.FloatArrayStatsUtils;
 import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 import org.openimaj.ml.clustering.assignment.HardAssigner;
+import org.openimaj.ml.clustering.kmeans.FloatKMeans;
 import org.openimaj.util.pair.IntFloatPair;
 import uk.ac.soton.ecs.comp3204.scenerecog.App;
 import uk.ac.soton.ecs.comp3204.scenerecog.DatasetUtil;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,5 +69,32 @@ public class Run2 {
         }
     }
 
+    /**
+     * Split FImage into patches.
+     * Patches are mean-centred and normalised.
+     * Can be use for Grid or Block-based feature.
+     * @param image FImage to be split into patches.
+     * @param patchSize Size of the patch. Size of N*N.
+     * @param patchStep Pixels to be move in x and y directions.
+     * @return List of feature vector.
+     */
+    private static List<float[]> getPatches(FImage image, int patchSize, int patchStep) {
+        List<float[]> patches = new ArrayList<float[]>();
 
+        for(int row=0; row<image.getHeight()-patchSize; row+=patchSize) {
+            for(int col=0; col<image.getWidth()-patchSize; col+=patchSize) {
+                FImage patch = image.extractROI(col, row, patchSize, patchSize);
+
+                // Mean-centring
+                float mean = FloatArrayStatsUtils.mean(image.pixels);
+                patch = patch.subtract(mean);
+
+                // Normalise
+                patch.normalise();
+
+                patches.add(patch.getFloatPixelVector());
+            }
+        }
+        return patches;
+    }
 }
