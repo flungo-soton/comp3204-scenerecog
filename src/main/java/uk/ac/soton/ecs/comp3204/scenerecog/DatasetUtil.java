@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.data.dataset.VFSGroupDataset;
 import org.openimaj.data.dataset.VFSListDataset;
+import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
 
 /**
@@ -28,11 +29,11 @@ public final class DatasetUtil {
         this.directory = directory;
     }
 
-    public VFSGroupDataset getTraining() throws FileSystemException {
+    public VFSGroupDataset<FImage> getTraining() throws FileSystemException {
         return new VFSGroupDataset("zip:" + directory.resolve(TRAINING_DATASET).toString(), ImageUtilities.FIMAGE_READER);
     }
 
-    public VFSListDataset getTesting() throws FileSystemException {
+    public VFSListDataset<FImage> getTesting() throws FileSystemException {
         return new VFSListDataset("zip:" + directory.resolve(TESTING_DATASET).toString(), ImageUtilities.FIMAGE_READER);
     }
 
