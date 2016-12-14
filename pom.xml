@@ -5,7 +5,7 @@
     <name>COMP3204 Scene Recognition</name>
 
     <groupId>uk.ac.soton.ecs.comp3204</groupId>
-    <artifactId>sceenrecog</artifactId>
+    <artifactId>scenerecog</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
