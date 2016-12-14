@@ -1,20 +1,17 @@
 package uk.ac.soton.ecs.comp3204.scenerecog.run2;
 
 
-import org.openimaj.data.dataset.VFSGroupDataset;
 import org.openimaj.feature.DoubleFV;
 import org.openimaj.feature.FeatureExtractor;
 import org.openimaj.image.FImage;
 import org.openimaj.image.feature.local.aggregate.BagOfVisualWords;
-import org.openimaj.ml.clustering.FloatCentroidsResult;
 import org.openimaj.ml.clustering.assignment.HardAssigner;
-import org.openimaj.ml.clustering.kmeans.FloatKMeans;
+import org.openimaj.util.array.ArrayUtils;
 import org.openimaj.util.pair.IntFloatPair;
+import uk.ac.soton.ecs.comp3204.scenerecog.VectorUtil;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 
 /**
@@ -61,17 +58,15 @@ public class BoVWExtractor implements FeatureExtractor<DoubleFV, FImage> {
             for(int col=0; col<image.getWidth()-patchSize; col+=patchSize) {
                 FImage patch = image.extractROI(col, row, patchSize, patchSize);
 
-/*
-                // Mean-centring
-                float mean = FloatArrayStatsUtils.mean(image.pixels);
-                patch = patch.subtract(mean);
-
+                // Mean centring
+                double[] vector = patch.getDoublePixelVector();
+                VectorUtil.meanCentring(vector);
+                // Convert back to float
+                float[] floatArr = VectorUtil.toFloatArr(vector);
                 // Normalise
-                patch.normalise();
-*/
+                ArrayUtils.normalise(floatArr);
 
-
-                patches.add(patch.getFloatPixelVector());
+                patches.add(floatArr);
             }
         }
         return patches;
