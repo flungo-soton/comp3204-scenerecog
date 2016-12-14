@@ -46,7 +46,7 @@ public class App {
         }
         try {
             // Run, Run1
-            run(new Run2(datasets), "2", datasets);
+            run(new Run2(), "2", datasets);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "IOException running classification run 2.", e);
         }

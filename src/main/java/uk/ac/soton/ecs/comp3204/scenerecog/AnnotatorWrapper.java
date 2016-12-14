@@ -6,22 +6,13 @@ import org.openimaj.image.FImage;
 import org.openimaj.ml.annotation.Annotator;
 
 /**
- * Abstract class to contain annotator.
+ * Wraps the annotator to provide a generic interface for training.
  *
- * @param <A> The type of Annotator that is created.
+ * @param <A> the type of the annotator that is wrapped.
  */
-public abstract class AnnotatorWrapper<A extends Annotator> {
+public interface AnnotatorWrapper<A extends Annotator> {
 
-    private final A annotator;
+    A getAnnotator();
 
-    public AnnotatorWrapper(A annotator) {
-        this.annotator = annotator;
-    }
-
-    public final A getAnnotator() {
-        return annotator;
-    }
-
-    public abstract void train(GroupedDataset<String, ? extends ListDataset<FImage>, FImage> training);
-
+    void train(GroupedDataset<String, ? extends ListDataset<FImage>, FImage> training);
 }

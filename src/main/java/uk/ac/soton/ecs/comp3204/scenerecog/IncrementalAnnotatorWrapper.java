@@ -10,7 +10,7 @@ import org.openimaj.ml.annotation.IncrementalAnnotator;
  *
  * @param <A> The type of IncrementalAnnotator that is created.
  */
-public class IncrementalAnnotatorWrapper<A extends IncrementalAnnotator> extends AnnotatorWrapper<A> {
+public class IncrementalAnnotatorWrapper<A extends IncrementalAnnotator> extends AbstractAnnotatorWrapper<A> {
 
     public IncrementalAnnotatorWrapper(A annotator) {
         super(annotator);

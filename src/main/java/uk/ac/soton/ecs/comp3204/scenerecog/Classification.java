@@ -77,6 +77,8 @@ public abstract class Classification<A extends Annotator> {
     }
 
     public CMResult<String> evaluate(GroupedDataset<String, ? extends ListDataset<FImage>, FImage> training, double trainingPercent) {
+        LOGGER.log(Level.FINE, "Evaluating classifier performance");
+
         // Get the annotator
         AnnotatorWrapper<A> annotator = getAnnotatorWrapper();
 
