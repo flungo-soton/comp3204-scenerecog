@@ -1,16 +1,16 @@
 package uk.ac.soton.ecs.comp3204.scenerecog.run2;
 
-
 import de.bwaldvogel.liblinear.SolverType;
-import gov.sandia.cognition.learning.algorithm.clustering.hierarchy.BatchHierarchicalClusterer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Logger;
 import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.data.dataset.VFSGroupDataset;
 import org.openimaj.feature.DoubleFV;
 import org.openimaj.feature.FeatureExtractor;
-import org.openimaj.image.DisplayUtilities;
 import org.openimaj.image.FImage;
-import org.openimaj.image.feature.local.aggregate.BagOfVisualWords;
-import org.openimaj.math.util.FloatArrayStatsUtils;
 import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 import org.openimaj.ml.clustering.FloatCentroidsResult;
 import org.openimaj.ml.clustering.assignment.HardAssigner;
@@ -20,14 +20,6 @@ import uk.ac.soton.ecs.comp3204.scenerecog.App;
 import uk.ac.soton.ecs.comp3204.scenerecog.BatchAnnotatorWrapper;
 import uk.ac.soton.ecs.comp3204.scenerecog.Classification;
 import uk.ac.soton.ecs.comp3204.scenerecog.DatasetUtil;
-
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Run2 extends Classification<LiblinearAnnotator<FImage, String>> {
 
@@ -71,7 +63,7 @@ public class Run2 extends Classification<LiblinearAnnotator<FImage, String>> {
             FImage image = (FImage) itr.next();
             List<float[]> patches = BoVWExtractor.getPatches(image, PATCHSIZE, PATCHSTEP);
 
-            for (int i=0; i<10; i++) {
+            for (int i = 0; i < 10; i++) {
                 float[] patch = patches.get(random.nextInt(patches.size()));
                 allPatches.add(patch);
             }
@@ -86,6 +78,5 @@ public class Run2 extends Classification<LiblinearAnnotator<FImage, String>> {
 
         return result.defaultHardAssigner();
     }
-
 
 }
