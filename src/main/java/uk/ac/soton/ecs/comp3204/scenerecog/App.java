@@ -34,7 +34,10 @@ public class App {
         }
         try {
             // Run, Run1
-            run(new Run1(1), "1", datasets); // TODO: is K correct?
+            run(new Run1(1), "1", datasets);
+            run(new Run1(3), "1-3", datasets);
+            run(new Run1(5), "1-5", datasets);
+            run(new Run1(11), "1-11", datasets);
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "IOException running classification run 1", ex);
         }
