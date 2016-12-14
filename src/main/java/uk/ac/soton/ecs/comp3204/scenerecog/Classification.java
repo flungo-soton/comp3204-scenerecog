@@ -73,7 +73,7 @@ public abstract class Classification<A extends Annotator> {
 
         LOGGER.log(Level.FINE, "Classifying the test data");
         DatasetClassifier<String, FImage> classifier = new DatasetClassifier(annotatorWrapper.getAnnotator());
-        return classifier.classifyIdentifiableParallel(testing.toIdentifiable());
+        return classifier.classifyIdentifiable(testing.toIdentifiable());
     }
 
     public CMResult<String> evaluate(GroupedDataset<String, ? extends ListDataset<FImage>, FImage> training, double trainingPercent) {
