@@ -9,9 +9,6 @@ import java.util.logging.Logger;
 import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.experiment.evaluation.classification.analysers.confusionmatrix.CMResult;
-
-import uk.ac.soton.ecs.comp3204.scenerecog.run1.Run1;
-import uk.ac.soton.ecs.comp3204.scenerecog.run2.Run2;
 import uk.ac.soton.ecs.comp3204.scenerecog.run3.Run3;
 
 /**
@@ -39,7 +36,6 @@ public class App {
             return;
         }
 
-/*
         try {
             // Run, Run1
             run(new Run1(1), "1", datasets);
@@ -49,7 +45,6 @@ public class App {
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "IOException running classification run 1.", ex);
         }
-
         try {
             // Run, Run2
             run(new Run2(), "2", datasets);
@@ -57,9 +52,8 @@ public class App {
             LOGGER.log(Level.SEVERE, "IOException in Run 2.", e);
             return;
         }
-*/
-
         try {
+            // Run, Run3
             run(new Run3(datasets), "3", datasets);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "IOException in Run 3.", e);
