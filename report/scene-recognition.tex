@@ -29,4 +29,16 @@ Evaluation uses the \texttt{ClassificationEvaluator} provided by OpenIMAJ in ord
 The train and test will use all of the training data and then test the unlabelled test data using a \texttt{DatasetClassifier} to classify the data into a \texttt{GroupedDataset} and the appropriate \texttt{GroupWriter} to write the output the results to file. In order to maintain file names, the images from the testing data are wrapped with \texttt{IdentifyableObject}.
 
 All classes have been implemented using Java Generics where appropriate in order to make them as reusable and robust as possible.
+
+\section{Implementations}
+
+\subsection{Tiny Images}
+
+The tiny images classifier reduces the size of the images to a $16 \times 16$ image by cropping the center and resizing. These tiny images can then be used a feature vectors of $256$ values. By reducing the images, it results in the averaging of values in regions in the image and using K-nearest-neighbour, these images can be classified to the class of the images from the training set which they most closely resemble.
+
+With this implementation, we were able to achieve an accuracy of $28.0\%$ (using $k=1$) which is better than random guessing but is still not accurate enough for use in any meaningful applications.
+
+This classifier performs poorly as it relies on similar scenes have similar pixel values in the same pixel location. Where this may be the case for certain scenes, such as streets  which have dark tarmac in the bottom middle with light buildings on either side and highways with dark tarmac containing white patches and light sky (both of which achieved 66.7\% accuracy within their class).
+
+Various $k$ values were tested and in general lower values of $k$ seemed to perform better and hence why $k=1$ was chosen. Using tiny images does not cluster well and so the neighbourhood of the vector seemed to have little significance. Using $k=1$ meant that if it was similar to one of the training images it would be classified the same. This may suggest that with more unseen data, $k=1$ may perform worse than a greater value.
 \end{document}
