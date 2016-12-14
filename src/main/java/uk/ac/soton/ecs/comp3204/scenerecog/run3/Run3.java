@@ -32,7 +32,7 @@ public class Run3 extends Classification<LiblinearAnnotator<FImage, String>> {
     public BatchAnnotatorWrapper<LiblinearAnnotator<FImage, String>> getAnnotatorWrapper() {
         try {
             DenseSIFT dsift = new DenseSIFT(5, 7);
-            PyramidDenseSIFT<FImage> pdsift = new PyramidDenseSIFT<FImage>(dsift, 6f, 7);
+            PyramidDenseSIFT<FImage> pdsift = new PyramidDenseSIFT<FImage>(dsift, 6f, 5, 7, 9, 11);
 
             HardAssigner<byte[], float[], IntFloatPair> assigner = PHoWExtractor.trainQuantiser(datasets.getTraining(), pdsift);
 
