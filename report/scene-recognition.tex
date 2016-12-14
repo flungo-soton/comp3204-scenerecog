@@ -24,7 +24,7 @@ In order to write the outputs of classifications to the respective output file i
 
 An abstracted base class \texttt{Classification} has been created which is able to train, test and evaluate an \texttt{Annotator}. An abstract \texttt{getAnnotatorWrapper} method is declared which should be fulfilled by the specific classifications. It uses the \texttt{AnnotatorWrapper} returned to interface with the specific annotator to evaluate, train and test.
 
-Evaluation uses the \texttt{ClassificationEvaluator} provided by OpenIMAJ in order to validate the training data. The data is split using a \texttt{StratifiedGroupedRandomisedPercentageHoldOut} which splits the data ensuring that the training and validation ratio is consistent for each class.
+Evaluation uses the \texttt{ClassificationEvaluator} provided by OpenIMAJ in order to validate the training data. The data is split using a \texttt{StratifiedGroupedRandomisedPercentageHoldOut} which splits the data ensuring that the training and validation ratio is consistent for each class. We have chosen to split the data with $85\%$ for training and $15\%$ for validation.
 
 The train and test will use all of the training data and then test the unlabelled test data using a \texttt{DatasetClassifier} to classify the data into a \texttt{GroupedDataset} and the appropriate \texttt{GroupWriter} to write the output the results to file. In order to maintain file names, the images from the testing data are wrapped with \texttt{IdentifyableObject}.
 
@@ -41,4 +41,13 @@ With this implementation, we were able to achieve an accuracy of $28.0\%$ (using
 This classifier performs poorly as it relies on similar scenes have similar pixel values in the same pixel location. Where this may be the case for certain scenes, such as streets  which have dark tarmac in the bottom middle with light buildings on either side and highways with dark tarmac containing white patches and light sky (both of which achieved 66.7\% accuracy within their class).
 
 Various $k$ values were tested and in general lower values of $k$ seemed to perform better and hence why $k=1$ was chosen. Using tiny images does not cluster well and so the neighbourhood of the vector seemed to have little significance. Using $k=1$ meant that if it was similar to one of the training images it would be classified the same. This may suggest that with more unseen data, $k=1$ may perform worse than a greater value.
+
+\subsection{Bag of Visual Words}
+
+Base on run2's specification, KMeans is to used to cluster features from all the images. But using all the patches in every single image is very slow so 10 patches are picked at random from every image. So the codebook contains 10*100*15 (patches * images * classes) patches. LibliearnAnnotator uses BoVWExtractor to extract features. BoVW class make use of all the patches from one image and return a sparse one-dimensional feature vector of int-valued elements. 
+
+There are 500 clusters KMeans generate to cluster 10 patches from every image. Very patch has the size of 8 by 8 and patches is extracted from every 4 pixels in x and y directions. 
+
+Accuracy is about $53\%$ of accuracy and none of the class accuracies is always high.
+
 \end{document}
