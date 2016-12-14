@@ -1,9 +1,12 @@
 package uk.ac.soton.ecs.comp3204.scenerecog;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.experiment.evaluation.classification.analysers.confusionmatrix.CMResult;
 import uk.ac.soton.ecs.comp3204.scenerecog.run1.Run1;
@@ -39,21 +42,27 @@ public class App {
             run(new Run1(5), "1-5", datasets);
             run(new Run1(11), "1-11", datasets);
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "IOException running classification run 1", ex);
+            LOGGER.log(Level.SEVERE, "IOException running classification run 1.", ex);
         }
         try {
+            // Run, Run1
             run(new Run2(datasets), "2", datasets);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "IOException in Run 2.", e);
-            return;
+            LOGGER.log(Level.SEVERE, "IOException running classification run 2.", e);
         }
     }
 
     public static void run(Classification classification, String runID, DatasetUtil datasets) throws IOException {
-        System.out.println("############ Run " + runID + " ############");
-        System.out.println();
+        PrintStream out = new PrintStream(
+                new TeeOutputStream(
+                        System.out,
+                        new FileOutputStream("run" + runID + "_report.txt")
+                )
+        );
+        out.println("############ Run " + runID + " ############");
+        out.println();
         CMResult<String> performance = classification.run(datasets, "run" + runID + ".txt", TRAINING_PCT);
-        System.out.println(performance.getDetailReport());
-        System.out.println();
+        out.println(performance.getDetailReport());
+        out.println();
     }
 }
