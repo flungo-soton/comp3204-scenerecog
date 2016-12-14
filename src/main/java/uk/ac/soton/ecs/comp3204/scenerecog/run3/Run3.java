@@ -10,6 +10,7 @@ import org.openimaj.image.feature.dense.gradient.dsift.DenseSIFT;
 import org.openimaj.image.feature.dense.gradient.dsift.PyramidDenseSIFT;
 import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 import org.openimaj.ml.clustering.assignment.HardAssigner;
+import org.openimaj.ml.kernel.HomogeneousKernelMap;
 import org.openimaj.util.pair.IntFloatPair;
 import uk.ac.soton.ecs.comp3204.scenerecog.App;
 import uk.ac.soton.ecs.comp3204.scenerecog.BatchAnnotatorWrapper;
@@ -36,7 +37,15 @@ public class Run3 extends Classification<LiblinearAnnotator<FImage, String>> {
 
             HardAssigner<byte[], float[], IntFloatPair> assigner = PHoWExtractor.trainQuantiser(datasets.getTraining(), pdsift);
 
-            FeatureExtractor<DoubleFV, FImage> extractor = new PHoWExtractor(pdsift, assigner);
+//            FeatureExtractor<DoubleFV, FImage> extractor = new PHoWExtractor(pdsift, assigner);
+
+            // Homogeneous
+            // This should give high accuracy
+            // Yes, we are winning
+            // Hahahahah
+            // Magic, DO NOT TOUCH
+            HomogeneousKernelMap homogeneousKM = new HomogeneousKernelMap(HomogeneousKernelMap.KernelType.Chi2, HomogeneousKernelMap.WindowType.Rectangular);
+            FeatureExtractor<DoubleFV, FImage> extractor = homogeneousKM.createWrappedExtractor(new PHoWExtractor(pdsift, assigner));
 
             return new BatchAnnotatorWrapper<LiblinearAnnotator<FImage, String>>(
                     new LiblinearAnnotator<FImage, String>(
