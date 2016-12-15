@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.experiment.evaluation.classification.analysers.confusionmatrix.CMResult;
+import uk.ac.soton.ecs.comp3204.scenerecog.run1.Run1;
+import uk.ac.soton.ecs.comp3204.scenerecog.run2.Run2;
 import uk.ac.soton.ecs.comp3204.scenerecog.run3.Run3;
 
 /**
