@@ -44,15 +44,15 @@ Various $k$ values were tested and in general lower values of $k$ seemed to perf
 
 \subsection{Bag of Visual Words}
 
-The Bag of Visual Word classifier extracts important features from the images and utilises the \texttt{LiblinearAnnotator} to build a linear classifier that uses these features to classify.
+The Bag of Visual Word classifier extracts features from the images and utilises the \texttt{LiblinearAnnotator} to build a linear classifier that uses these features to classify.
 
 This classifier has 2 stages as part of its training. First it trains a \texttt{HardAssigner} to be able to assign patches to a closest match in a codebook. The codebook is trained by splitting images into patches using a specified  \texttt{patchSize} and \texttt{patchStep}. For a single image this can create hundreds of patches which would make reducing to a set of core features much slower and possibly require a higher $k$ value for the clustering so a fixed number of \texttt{patchesPerImage} are kept from each image. 
 
-Once patches have been collected from the images, $k$-means clustering is performed to reduce to a fixed size of centroids which provides the \texttt{HardAssigner} that will be used to assign patches to their closest centroid.
+Once patches have been collected from the images, $k$-means clustering is performed to reduce to a specified number of centroids which provides the \texttt{HardAssigner} that will be used to assign patches to their closest centroid.
 
-This \texttt{HardAssigner} can then be turned into a feature extractor which extracts the features of the highest prominence in the image. The \texttt{BoVWExtractor} uses the trained \texttt{HardAssigner} to extract features by iterating through all patches and assigning to one of the centroids in the \texttt{HardAssigner}'s code book. The resulting feature vector is a sparse vector representing the number of times that a feature form the codebook was found in patches from the image.
+This \texttt{HardAssigner} used as part of a feature extractor which extracts a feature representing the number of occurrences of the visual words. The \texttt{BoVWExtractor} uses the trained \texttt{HardAssigner} to extract features by iterating through all patches and assigning to one of the centroids in the \texttt{HardAssigner}'s code book. The resulting feature vector is a sparse vector representing the number of times that a feature form the codebook was found in patches from the image.
 
-The \texttt{LiblinearAnnotator} then uses the \texttt{BoVWExtractor} to extract the features of interest from the images it receives. During the training phase, it crease a linear classification between these features and the class of the images that contain the respective feature so that it is able to identify images.
+The \texttt{LiblinearAnnotator} then uses the \texttt{BoVWExtractor} to extract the features form each image. During the training phase, it creates a L2-regularized L2-loss support vector classification between these features and the class of the images that contain the respective feature so that it is able to identify images.
 
 The BoVW classifier uses 4 parameters to configure its running, \texttt{patchSize}, \texttt{patchStep}, \texttt{patchesPerImage} and \texttt{kMeans}. All of these parameters are used in the construction of the codebook and can be tweaked to optimise for speed or performance. For our final run, we decided upon using \texttt{patchSize = 8}, \texttt{patchStep = 4}, \texttt{patchesPerImage = 10} and \texttt{kMeans = 500}. Using these values provides a reasonable patch size with overlap for between the patches that are extracted and should make finding relevant matching patches effective. With these parameters, we were able to achieve an accuracy of $62.2\%$.
 
