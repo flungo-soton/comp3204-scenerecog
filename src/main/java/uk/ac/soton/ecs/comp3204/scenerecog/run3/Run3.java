@@ -32,8 +32,14 @@ public class Run3 extends Classification<LiblinearAnnotator<FImage, String>> {
     @Override
     public BatchAnnotatorWrapper<LiblinearAnnotator<FImage, String>> getAnnotatorWrapper() {
         try {
-            DenseSIFT dsift = new DenseSIFT(5, 7);
-            PyramidDenseSIFT<FImage> pdsift = new PyramidDenseSIFT<FImage>(dsift, 6f, 5, 7, 9, 11);
+            // Extract patches from image, patches are known as bin here.
+            // Extract SIFT from patches.
+            // Patches are size of 7 by 7 and every 3 pixels on x and y directions.
+            DenseSIFT dsift = new DenseSIFT(3, 7);
+            // magFactor used for smooth
+            // 0 will have no smooth
+            // Scale level with 4,6,8,10
+            PyramidDenseSIFT<FImage> pdsift = new PyramidDenseSIFT<FImage>(dsift, 6f, 4, 6, 8, 10);
 
             HardAssigner<byte[], float[], IntFloatPair> assigner = PHoWExtractor.trainQuantiser(datasets.getTraining(), pdsift);
 
