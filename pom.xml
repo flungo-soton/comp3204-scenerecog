@@ -64,6 +64,16 @@
             <version>4.8.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.openimaj</groupId>
+            <artifactId>image-local-features</artifactId>
+            <version>${openimaj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openimaj</groupId>
+            <artifactId>image-local-features</artifactId>
+            <version>${openimaj.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

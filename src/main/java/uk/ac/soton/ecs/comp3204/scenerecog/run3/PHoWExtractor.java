@@ -12,6 +12,7 @@ import org.openimaj.image.feature.dense.gradient.dsift.ByteDSIFTKeypoint;
 import org.openimaj.image.feature.dense.gradient.dsift.PyramidDenseSIFT;
 import org.openimaj.image.feature.local.aggregate.BagOfVisualWords;
 import org.openimaj.image.feature.local.aggregate.BlockSpatialAggregator;
+import org.openimaj.image.feature.local.aggregate.PyramidSpatialAggregator;
 import org.openimaj.ml.clustering.ByteCentroidsResult;
 import org.openimaj.ml.clustering.assignment.HardAssigner;
 import org.openimaj.ml.clustering.kmeans.ByteKMeans;
@@ -37,8 +38,11 @@ public class PHoWExtractor implements FeatureExtractor<DoubleFV, FImage> {
 
         BagOfVisualWords<byte[]> bovw = new BagOfVisualWords<byte[]>(assigner);
 
-        BlockSpatialAggregator<byte[], SparseIntFV> spatial = new BlockSpatialAggregator<byte[], SparseIntFV>(
-                bovw, 2, 2);
+        // In every level of pyramid,
+        // splite image into 8 blocks (2 hor and 4 ver).
+        // Then extract the features.
+        PyramidSpatialAggregator<byte[], SparseIntFV> spatial = new PyramidSpatialAggregator<byte[], SparseIntFV>(
+                bovw, 2, 4);
 
         return spatial.aggregate(pdsift.getByteKeypoints(0.015f), image.getBounds()).normaliseFV();
     }
