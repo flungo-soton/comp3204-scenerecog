@@ -12,9 +12,8 @@ import org.openimaj.feature.FeatureExtractor;
 import org.openimaj.feature.local.data.LocalFeatureListDataSource;
 import org.openimaj.feature.local.list.LocalFeatureList;
 import org.openimaj.image.FImage;
+import org.openimaj.image.feature.dense.gradient.dsift.AbstractDenseSIFT;
 import org.openimaj.image.feature.dense.gradient.dsift.ByteDSIFTKeypoint;
-import org.openimaj.image.feature.dense.gradient.dsift.DenseSIFT;
-import org.openimaj.image.feature.dense.gradient.dsift.PyramidDenseSIFT;
 import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 import org.openimaj.ml.clustering.ByteCentroidsResult;
 import org.openimaj.ml.clustering.assignment.HardAssigner;
@@ -28,24 +27,16 @@ import uk.ac.soton.ecs.comp3204.scenerecog.AnnotatorWrapper;
  */
 public class PHoWAnnotationWrapper implements AnnotatorWrapper<LiblinearAnnotator<FImage, String>> {
 
-    private final PyramidDenseSIFT<FImage> pdsift;
+    private final AbstractDenseSIFT<FImage> pdsift;
     private final HomogeneousKernelMap homogeneousKM;
+    private final int maxFeatures = 10000;
+    private final int visualWords = 600;
 
     private LiblinearAnnotator<FImage, String> annotator = null;
 
-    public PHoWAnnotationWrapper() {
-        // Extract patches from image, patches are known as bin here.
-        // Extract SIFT from patches.
-        // Patches are size of 7 by 7 and every 3 pixels on x and y directions.
-        DenseSIFT dsift = new DenseSIFT(3, 7);
-        // magFactor used for smooth
-        // 0 will have no smooth
-        // Scale level with 4,6,8,10
-        pdsift = new PyramidDenseSIFT<>(dsift, 6f, 4, 6, 8, 10);
-
-        // Homogeneous Kernel Map
-        // This should give high accuracy
-        homogeneousKM = new HomogeneousKernelMap(HomogeneousKernelMap.KernelType.Chi2, HomogeneousKernelMap.WindowType.Rectangular);
+    public PHoWAnnotationWrapper(AbstractDenseSIFT<FImage> pdsift, HomogeneousKernelMap homogeneousKM) {
+        this.pdsift = pdsift;
+        this.homogeneousKM = homogeneousKM;
     }
 
     @Override
@@ -85,18 +76,20 @@ public class PHoWAnnotationWrapper implements AnnotatorWrapper<LiblinearAnnotato
 
         List<LocalFeatureList<ByteDSIFTKeypoint>> allkeys = new ArrayList<>();
 
+        // Extract the SIFT features
         for (FImage img : sample) {
             pdsift.analyseImage(img);
             allkeys.add(pdsift.getByteKeypoints(0.005f));
         }
 
-        if (allkeys.size() > 10000) {
-            allkeys = allkeys.subList(0, 10000);
+        // Truncate the number of features if too many
+        if (allkeys.size() > maxFeatures) {
+            allkeys = allkeys.subList(0, maxFeatures);
         }
 
         // Create 600 clusters
         // Eventually there will by 600 of visual words
-        ByteKMeans km = ByteKMeans.createKDTreeEnsemble(600);
+        ByteKMeans km = ByteKMeans.createKDTreeEnsemble(visualWords);
         DataSource<byte[]> datasource = new LocalFeatureListDataSource<>(allkeys);
         ByteCentroidsResult result = km.cluster(datasource);
 

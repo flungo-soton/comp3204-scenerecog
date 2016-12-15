@@ -4,7 +4,7 @@ import org.openimaj.feature.DoubleFV;
 import org.openimaj.feature.FeatureExtractor;
 import org.openimaj.feature.SparseIntFV;
 import org.openimaj.image.FImage;
-import org.openimaj.image.feature.dense.gradient.dsift.PyramidDenseSIFT;
+import org.openimaj.image.feature.dense.gradient.dsift.AbstractDenseSIFT;
 import org.openimaj.image.feature.local.aggregate.BagOfVisualWords;
 import org.openimaj.image.feature.local.aggregate.PyramidSpatialAggregator;
 import org.openimaj.ml.clustering.assignment.HardAssigner;
@@ -12,10 +12,10 @@ import org.openimaj.util.pair.IntFloatPair;
 
 public class PHoWExtractor implements FeatureExtractor<DoubleFV, FImage> {
 
-    PyramidDenseSIFT<FImage> pdsift;
+    AbstractDenseSIFT<FImage> pdsift;
     HardAssigner<byte[], float[], IntFloatPair> assigner;
 
-    public PHoWExtractor(PyramidDenseSIFT<FImage> pdsift, HardAssigner<byte[], float[], IntFloatPair> assigner) {
+    public PHoWExtractor(AbstractDenseSIFT<FImage> pdsift, HardAssigner<byte[], float[], IntFloatPair> assigner) {
         this.pdsift = pdsift;
         this.assigner = assigner;
     }
@@ -32,6 +32,7 @@ public class PHoWExtractor implements FeatureExtractor<DoubleFV, FImage> {
         PyramidSpatialAggregator<byte[], SparseIntFV> spatial
                 = new PyramidSpatialAggregator<>(bovw, 2, 4);
 
+        // Aggregate the
         return spatial.aggregate(pdsift.getByteKeypoints(0.015f), image.getBounds()).normaliseFV();
     }
 }
