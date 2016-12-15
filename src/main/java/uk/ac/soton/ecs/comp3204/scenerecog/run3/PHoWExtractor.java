@@ -56,7 +56,9 @@ public class PHoWExtractor implements FeatureExtractor<DoubleFV, FImage> {
         if (allkeys.size() > 10000)
             allkeys = allkeys.subList(0, 10000);
 
-        ByteKMeans km = ByteKMeans.createKDTreeEnsemble(300);
+        // Create 600 clusters
+        // Eventually there will by 600 of visual words
+        ByteKMeans km = ByteKMeans.createKDTreeEnsemble(600);
         DataSource<byte[]> datasource = new LocalFeatureListDataSource<ByteDSIFTKeypoint, byte[]>(allkeys);
         ByteCentroidsResult result = km.cluster(datasource);
 
