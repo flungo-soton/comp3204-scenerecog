@@ -50,7 +50,10 @@ public class PHoWAnnotationWrapper implements AnnotatorWrapper<LiblinearAnnotato
 
     @Override
     public LiblinearAnnotator<FImage, String> getAnnotator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (annotator == null) {
+            throw new IllegalStateException("Annotator must be trained first.");
+        }
+        return annotator;
     }
 
     /**
