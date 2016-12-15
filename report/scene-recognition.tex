@@ -44,14 +44,24 @@ Various $k$ values were tested and in general lower values of $k$ seemed to perf
 
 \subsection{Bag of Visual Words}
 
-Base on run2's specification, KMeans is to used to cluster features from all the images. But using all the patches in every single image is very slow so 10 patches are picked at random from every image. So the codebook contains 10*100*15 (patches * images * classes) patches. LibliearnAnnotator uses BoVWExtractor to extract features. BoVW class make use of all the patches from one image and return a sparse one-dimensional feature vector of int-valued elements. 
+The Bag of Visual Word classifier extracts important features from the images and utilises the \texttt{LiblinearAnnotator} to build a linear classifier that uses these features to classify.
 
-There are 500 clusters KMeans generate to cluster 10 patches from every image. Very patch has the size of 8 by 8 and patches is extracted from every 4 pixels in x and y directions. 
+This classifier has 2 stages as part of its training. First it trains a \texttt{HardAssigner} to be able to assign patches to a closest match in a codebook. The codebook is trained by splitting images into patches using a specified  \texttt{patchSize} and \texttt{patchStep}. For a single image this can create hundreds of patches which would make reducing to a set of core features much slower and possibly require a higher $k$ value for the clustering so a fixed number of \texttt{patchesPerImage} are kept from each image. 
 
-Accuracy is about $53\%$ of accuracy and none of the class accuracies is always high.
+Once patches have been collected from the images, $k$-means clustering is performed to reduce to a fixed size of centroids which provides the \texttt{HardAssigner} that will be used to assign patches to their closest centroid.
+
+This \texttt{HardAssigner} can then be turned into a feature extractor which extracts the features of the highest prominence in the image. The \texttt{BoVWExtractor} uses the trained \texttt{HardAssigner} to extract features by iterating through all patches and assigning to one of the centroids in the \texttt{HardAssigner}'s code book. The resulting feature vector is a sparse vector representing the number of times that a feature form the codebook was found in patches from the image.
+
+The \texttt{LiblinearAnnotator} then uses the \texttt{BoVWExtractor} to extract the features of interest from the images it receives. During the training phase, it crease a linear classification between these features and the class of the images that contain the respective feature so that it is able to identify images.
+
+The BoVW classifier uses 4 parameters to configure its running, \texttt{patchSize}, \texttt{patchStep}, \texttt{patchesPerImage} and \texttt{kMeans}. All of these parameters are used in the construction of the codebook and can be tweaked to optimise for speed or performance. For our final run, we decided upon using \texttt{patchSize = 8}, \texttt{patchStep = 4}, \texttt{patchesPerImage = 10} and \texttt{kMeans = 500}. Using these values provides a reasonable patch size with overlap for between the patches that are extracted and should make finding relevant matching patches effective. With these parameters, we were able to achieve an accuracy of $62.2\%$.
 
 \subsection{Pyramid Histogram of Words}
 
 The technique used in this run is Pyramid Histogram of Words (PHoW). It Uses Pyramid Dense SIFT feature and split the image into 4 histograms evenly. For performance purposes, we have the bin size of Dense SIFT set to 7.
+
+\section{Contributions}
+
+The work for the project was balanced between the two members splitting workloads where possible and assigning to make best use of the skills of the individual and using paired programming where appropriate.
 
 \end{document}
