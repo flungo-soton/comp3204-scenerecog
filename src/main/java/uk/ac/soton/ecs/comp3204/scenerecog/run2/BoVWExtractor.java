@@ -12,8 +12,8 @@ import org.openimaj.util.pair.IntFloatPair;
 import uk.ac.soton.ecs.comp3204.scenerecog.VectorUtil;
 
 /**
- * Get all the patches from one image as features Merge all the features into one Return this feature as the feature of
- * the image
+ * Get all the patches from one image as features Merge all the features into
+ * one Return this feature as the feature of the image
  */
 public class BoVWExtractor implements FeatureExtractor<DoubleFV, FImage> {
 
@@ -31,13 +31,14 @@ public class BoVWExtractor implements FeatureExtractor<DoubleFV, FImage> {
     public DoubleFV extractFeature(FImage object) {
         List<float[]> feature = getPatches(object, patchSize, patchStep);
 
-        BagOfVisualWords<float[]> bovw = new BagOfVisualWords<float[]>(this.assigner);
+        BagOfVisualWords<float[]> bovw = new BagOfVisualWords<>(this.assigner);
         // Merge all the features into one
         return bovw.aggregateVectorsRaw(feature).asDoubleFV();
     }
 
     /**
-     * Split FImage into patches. Patches are mean-centred and normalised. Can be use for Grid or Block-based feature.
+     * Split FImage into patches. Patches are mean-centred and normalised. Can
+     * be use for Grid or Block-based feature.
      *
      * @param image FImage to be split into patches.
      * @param patchSize Size of the patch. Size of N*N.
@@ -45,7 +46,7 @@ public class BoVWExtractor implements FeatureExtractor<DoubleFV, FImage> {
      * @return List of feature vector.
      */
     public static List<float[]> getPatches(FImage image, int patchSize, int patchStep) {
-        List<float[]> patches = new ArrayList<float[]>();
+        List<float[]> patches = new ArrayList<>();
 
         for (int row = 0; row < image.getHeight() - patchSize; row += patchSize) {
             for (int col = 0; col < image.getWidth() - patchSize; col += patchSize) {

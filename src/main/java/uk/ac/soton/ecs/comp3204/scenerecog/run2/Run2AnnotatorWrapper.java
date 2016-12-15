@@ -2,9 +2,7 @@ package uk.ac.soton.ecs.comp3204.scenerecog.run2;
 
 import de.bwaldvogel.liblinear.SolverType;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
 import org.openimaj.data.RandomData;
 import org.openimaj.data.dataset.GroupedDataset;
 import org.openimaj.data.dataset.ListDataset;
@@ -19,19 +17,23 @@ import org.openimaj.util.pair.IntFloatPair;
 import uk.ac.soton.ecs.comp3204.scenerecog.AnnotatorWrapper;
 
 /**
- * Custom annotation wrapper for Run 2 which deals with the more complex requirements for training.
+ * Custom annotation wrapper for Run 2 which deals with the more complex
+ * requirements for training.
  */
 public class Run2AnnotatorWrapper implements AnnotatorWrapper<LiblinearAnnotator<FImage, String>> {
 
     private LiblinearAnnotator<FImage, String> annotator = null;
 
-    private static final int NUMOFFEATURES = 10;
     private final int patchSize;
     private final int patchStep;
+    private final int patchPerImage;
+    private final int kMeans;
 
-    public Run2AnnotatorWrapper(int patchSize, int patchStep) {
+    public Run2AnnotatorWrapper(int patchSize, int patchStep, int patchPerImage, int kMeans) {
         this.patchSize = patchSize;
         this.patchStep = patchStep;
+        this.patchPerImage = patchPerImage;
+        this.kMeans = kMeans;
     }
 
     @Override
@@ -46,8 +48,11 @@ public class Run2AnnotatorWrapper implements AnnotatorWrapper<LiblinearAnnotator
     public void train(GroupedDataset<String, ? extends ListDataset<FImage>, FImage> training) {
         if (annotator == null) {
             // If there is no annotator, do patch extraction and initialise annotator
-            HardAssigner<float[], float[], IntFloatPair> assigner = trainQuantiser(training, patchSize, patchStep);
+            // Construct the hard assigner
+            HardAssigner<float[], float[], IntFloatPair> assigner = trainQuantiser(training);
+            // Build the extractor
             FeatureExtractor<DoubleFV, FImage> extractor = new BoVWExtractor(assigner, patchSize, patchStep);
+            // Create the annotator
             annotator = new LiblinearAnnotator<>(
                     extractor, LiblinearAnnotator.Mode.MULTICLASS, SolverType.L2R_L2LOSS_SVC, 1.0, 0.00001
             );
@@ -55,19 +60,18 @@ public class Run2AnnotatorWrapper implements AnnotatorWrapper<LiblinearAnnotator
         annotator.train(training);
     }
 
-    static HardAssigner<float[], float[], IntFloatPair> trainQuantiser(
-            GroupedDataset<String, ? extends ListDataset<FImage>, FImage> datasets, int patchSize, int patchStep
+    private HardAssigner<float[], float[], IntFloatPair> trainQuantiser(
+            GroupedDataset<String, ? extends ListDataset<FImage>, FImage> datasets
     ) {
         // Use for k means cluster
-        List<float[]> allPatches = new ArrayList<float[]>();
+        List<float[]> allPatches = new ArrayList<>();
 
-        // From all images, pick 10 random patches.
-        Iterator itr = datasets.iterator();
-        while (itr.hasNext()) {
-            FImage image = (FImage) itr.next();
+        // From all images, pick patchPerImage random patches.
+        for (FImage image : datasets) {
             List<float[]> patches = BoVWExtractor.getPatches(image, patchSize, patchStep);
 
-            int[] uniqueKeys = RandomData.getUniqueRandomInts(NUMOFFEATURES, 0, patches.size());
+            // Get patchPerImage unique patch IDs
+            int[] uniqueKeys = RandomData.getUniqueRandomInts(patchPerImage, 0, patches.size());
             for (int i = 0; i < uniqueKeys.length; i++) {
                 float[] patch = patches.get(uniqueKeys[i]);
                 allPatches.add(patch);
@@ -78,7 +82,7 @@ public class Run2AnnotatorWrapper implements AnnotatorWrapper<LiblinearAnnotator
         float[][] sample = allPatches.toArray(new float[allPatches.size()][]);
 
         // Create 500 clusters
-        FloatKMeans km = FloatKMeans.createExact(500);
+        FloatKMeans km = FloatKMeans.createExact(kMeans);
         FloatCentroidsResult result = km.cluster(sample);
 
         return result.defaultHardAssigner();

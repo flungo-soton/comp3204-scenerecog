@@ -10,12 +10,21 @@ public class Run2 extends Classification<LiblinearAnnotator<FImage, String>> {
 
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-    private static final int PATCHSIZE = 8;
-    private static final int PATCHSTEP = 4;
+    private final int patchSize;
+    private final int patchStep;
+    private final int patchPerImage;
+    private final int kMeans;
+
+    public Run2(int patchSize, int patchStep, int patchPerImage, int kMeans) {
+        this.patchSize = patchSize;
+        this.patchStep = patchStep;
+        this.patchPerImage = patchPerImage;
+        this.kMeans = kMeans;
+    }
 
     @Override
     public Run2AnnotatorWrapper getAnnotatorWrapper() {
-        return new Run2AnnotatorWrapper(PATCHSIZE, PATCHSTEP);
+        return new Run2AnnotatorWrapper(patchSize, patchStep, patchPerImage, kMeans);
     }
 
 }
