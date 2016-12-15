@@ -1,5 +1,7 @@
 %%% Preamble
-\documentclass[paper=a4, fontsize=11pt]{article}
+\documentclass[paper=a4]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
 \begin{document}
 \title{Scene Recognition}
 \author{Jianzu Guan (jg17g13) and Fabrizio Lungo (fl4g12)}
@@ -54,14 +56,46 @@ This \texttt{HardAssigner} used as part of a feature extractor which extracts a 
 
 The \texttt{LiblinearAnnotator} then uses the \texttt{BoVWExtractor} to extract the features form each image. During the training phase, it creates a L2-regularized L2-loss support vector classification between these features and the class of the images that contain the respective feature so that it is able to identify images.
 
-The BoVW classifier uses 4 parameters to configure its running, \texttt{patchSize}, \texttt{patchStep}, \texttt{patchesPerImage} and \texttt{kMeans}. All of these parameters are used in the construction of the codebook and can be tweaked to optimise for speed or performance. For our final run, we decided upon using \texttt{patchSize = 8}, \texttt{patchStep = 4}, \texttt{patchesPerImage = 10} and \texttt{kMeans = 500}. Using these values provides a reasonable patch size with overlap for between the patches that are extracted and should make finding relevant matching patches effective. With these parameters, we were able to achieve an accuracy of $62.2\%$.
+The BoVW classifier uses 4 parameters to configure its running, \texttt{patchSize}, \texttt{patchStep}, \texttt{patchesPerImage} and \texttt{kMeans}. All of these parameters are used in the construction of the codebook and can be tweaked to optimise for speed or performance. For our final run, we decided upon using \texttt{patchSize = 8}, \texttt{patchStep = 4}, \texttt{patchesPerImage = 10} and \texttt{kMeans = 500}. Using these values provides a reasonable patch size with overlap for between the patches that are extracted and should make finding relevant matching patches effective. With these parameters, we were able to achieve an accuracy of $53.8\%$. %TODO Is this correct?
 
 \subsection{Pyramid Histogram of Words}
 
-The technique used in this run is Pyramid Histogram of Words (PHoW). It Uses Pyramid Dense SIFT feature and split the image into 4 histograms evenly. For performance purposes, we have the bin size of Dense SIFT set to 7.
+The Pyramid Histogram of Words classifier extracts dense SIFT features from the images and utilises the \texttt{LiblinearAnnotator} to build a linear classifier that uses these features to classify.
+
+The classifier utilises a \texttt{PyramidDenseSIFT} which uses bins of a specified size and step, similar to the patches used in the Bag of Visual Word classifier. The pyramid aspect runs the algorithm at various scales of the image with Gaussian smoothing to provide scale invariance of the features. This is then used to extract a list of local SIFT key points that have an energy above a certain threshold.
+
+A \texttt{HardAssigner} is created to assign features their closest match in the list of features that were evaluated during training. To perform this assignment an approximate \texttt{ByteKMeans} classification is performed using an ensemble of KD-Trees to perform nearest-neighbour lookup which is trained with the features to find a specified number of visual words (centroids in the K-means classification).
+
+To extract features from images, the \texttt{PHoWExtractor} analyses the image to find its SIFT features using the same \texttt{PyramidDenseSIFT} that was used to learn the visual words. These features are then assigned to their closest match using the \texttt{HardAssigner} as part of a \texttt{BagOfVisualWords}. To improve the accuracy, we wrap the \texttt{BagOfVisualWords} with a \texttt{PyramidSpatialAggregator} that split the image into a specified number of sections for each level of its pyramid. Features are spatially aggregated into histograms by the \texttt{BagOfVisualWords}.
+
+% Homogeneous
+
+As with the Bag of Visual Word classifier, a \texttt{LiblinearAnnotator} is used to construct the L2-regularized L2-loss support vector classifier for classifying images, but using the \texttt{PHoWExtractor} instead of the \texttt{BoVWExtractor} which is wrapped with a \texttt{HomogeneousKernelMap} to improve accuracy.
+
+The implementation we ran for classification is configured with the following:
+\begin{itemize}
+\item \texttt{HardAssigner} constructed with a maximum of $10000$ features which are grouped into $600$ $k$-mean centroids.
+\item \texttt{PyramidDenseSIFT} configured with bin size of $7$ and step $3$ using a pyramid with magnification factor of $6$ and scales of $4$, $6$, $8$ and $10$.
+\item \texttt{HomogeneousKernelMap} configured to use the \texttt{Chi2} kernel type and a rectangular window type.
+\end{itemize}
+
+With this classifier, we were able to achieve an accuracy of $77.3\%$ which is much higher than that gained from the Tiny Images and BoVW classifiers. For certain classes such as forest, tall building, suburb and coast, this classifier was able to achieve an accuracy of over $90\%$.
 
 \section{Contributions}
 
 The work for the project was balanced between the two members splitting workloads where possible and assigning to make best use of the skills of the individual and using paired programming where appropriate.
+
+\newpage
+\section{Appendix}
+\begin{appendix}
+\section{Run 1 Evaluation Report}
+\lstinputlisting{run1.txt}
+\newpage
+\section{Run 2 Evaluation Report}
+\lstinputlisting{run2.txt}
+\newpage
+\section{Run 3 Evaluation Report}
+\lstinputlisting{run3.txt}
+\end{appendix}
 
 \end{document}

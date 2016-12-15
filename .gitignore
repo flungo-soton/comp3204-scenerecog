@@ -1,7 +1,7 @@
 target/
 /data/
 handin.zip
-run*.txt
+/run*.txt
 
 # JetBrain IDE files
 .idea/
