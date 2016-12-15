@@ -69,7 +69,7 @@ public class Run2AnnotatorWrapper implements AnnotatorWrapper<LiblinearAnnotator
 
             int[] uniqueKeys = RandomData.getUniqueRandomInts(NUMOFFEATURES, 0, patches.size());
             for (int i = 0; i < uniqueKeys.length; i++) {
-                float[] patch = patches.get(i);
+                float[] patch = patches.get(uniqueKeys[i]);
                 allPatches.add(patch);
             }
         }
