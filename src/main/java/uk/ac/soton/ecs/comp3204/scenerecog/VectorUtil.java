@@ -20,7 +20,7 @@ public class VectorUtil {
 
     public static float[] toFloatArr(double[] doubleArr) {
         float[] floatArr = new float[doubleArr.length];
-        for (int i=0; i<doubleArr.length; i++) {
+        for (int i = 0; i < doubleArr.length; i++) {
             floatArr[i] = (float) doubleArr[i];
         }
         return floatArr;

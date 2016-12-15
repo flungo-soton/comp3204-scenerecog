@@ -1,5 +1,7 @@
 package uk.ac.soton.ecs.comp3204.scenerecog.run3;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.openimaj.data.DataSource;
 import org.openimaj.data.dataset.Dataset;
 import org.openimaj.feature.DoubleFV;
@@ -11,16 +13,11 @@ import org.openimaj.image.FImage;
 import org.openimaj.image.feature.dense.gradient.dsift.ByteDSIFTKeypoint;
 import org.openimaj.image.feature.dense.gradient.dsift.PyramidDenseSIFT;
 import org.openimaj.image.feature.local.aggregate.BagOfVisualWords;
-import org.openimaj.image.feature.local.aggregate.BlockSpatialAggregator;
 import org.openimaj.image.feature.local.aggregate.PyramidSpatialAggregator;
 import org.openimaj.ml.clustering.ByteCentroidsResult;
 import org.openimaj.ml.clustering.assignment.HardAssigner;
 import org.openimaj.ml.clustering.kmeans.ByteKMeans;
 import org.openimaj.util.pair.IntFloatPair;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class PHoWExtractor implements FeatureExtractor<DoubleFV, FImage> {
 
@@ -57,8 +54,9 @@ public class PHoWExtractor implements FeatureExtractor<DoubleFV, FImage> {
             allkeys.add(pdsift.getByteKeypoints(0.005f));
         }
 
-        if (allkeys.size() > 10000)
+        if (allkeys.size() > 10000) {
             allkeys = allkeys.subList(0, 10000);
+        }
 
         // Create 600 clusters
         // Eventually there will by 600 of visual words
@@ -69,4 +67,3 @@ public class PHoWExtractor implements FeatureExtractor<DoubleFV, FImage> {
         return result.defaultHardAssigner();
     }
 }
-

@@ -12,8 +12,9 @@ import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
 
 /**
- * Utility for loading the testing and training datasets (as zips) from a given directory. The zips should be named
- * {@code training.zip} and {@code testing.zip}.
+ * Utility for loading the testing and training datasets (as zips) from a given
+ * directory. The zips should be named {@code training.zip} and
+ * {@code testing.zip}.
  */
 public final class DatasetUtil {
 
@@ -22,7 +23,6 @@ public final class DatasetUtil {
     public static final String REMOTE_DATASET_DIRECTORY = "http://comp3204.ecs.soton.ac.uk/cw/";
     public static final String TRAINING_DATASET = "training.zip!/training";
     public static final String TESTING_DATASET = "testing.zip!/testing";
-
 
     private URI directory;
 

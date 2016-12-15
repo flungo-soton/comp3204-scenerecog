@@ -7,9 +7,10 @@ import org.openimaj.image.processing.resize.ResizeProcessor;
 import uk.ac.soton.ecs.comp3204.scenerecog.VectorUtil;
 
 /**
- * Extracts a tiny image from the provided image. The tiny image is produced by taking the centre square of the image
- * which is resized to a fixed size using the resizer provided. The feature vector is composed of the float pixel values
- * of the reduced image.
+ * Extracts a tiny image from the provided image. The tiny image is produced by
+ * taking the centre square of the image which is resized to a fixed size using
+ * the resizer provided. The feature vector is composed of the float pixel
+ * values of the reduced image.
  */
 public class TinyImageExtractor implements FeatureExtractor<DoubleFV, FImage> {
 

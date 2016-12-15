@@ -1,7 +1,7 @@
 package uk.ac.soton.ecs.comp3204.scenerecog.run3;
 
-
 import de.bwaldvogel.liblinear.SolverType;
+import java.util.logging.Logger;
 import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.feature.DoubleFV;
 import org.openimaj.feature.FeatureExtractor;
@@ -16,8 +16,6 @@ import uk.ac.soton.ecs.comp3204.scenerecog.App;
 import uk.ac.soton.ecs.comp3204.scenerecog.BatchAnnotatorWrapper;
 import uk.ac.soton.ecs.comp3204.scenerecog.Classification;
 import uk.ac.soton.ecs.comp3204.scenerecog.DatasetUtil;
-
-import java.util.logging.Logger;
 
 public class Run3 extends Classification<LiblinearAnnotator<FImage, String>> {
 
@@ -42,8 +40,6 @@ public class Run3 extends Classification<LiblinearAnnotator<FImage, String>> {
             PyramidDenseSIFT<FImage> pdsift = new PyramidDenseSIFT<FImage>(dsift, 6f, 4, 6, 8, 10);
 
             HardAssigner<byte[], float[], IntFloatPair> assigner = PHoWExtractor.trainQuantiser(datasets.getTraining(), pdsift);
-
-//            FeatureExtractor<DoubleFV, FImage> extractor = new PHoWExtractor(pdsift, assigner);
 
             // Homogeneous
             // This should give high accuracy
