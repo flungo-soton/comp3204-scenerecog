@@ -15,9 +15,9 @@ import org.openimaj.data.dataset.ReadableListDataset;
 import org.openimaj.data.identity.IdentifiableObject;
 import org.openimaj.experiment.evaluation.classification.analysers.confusionmatrix.CMResult;
 import org.openimaj.image.FImage;
-import uk.ac.soton.ecs.comp3204.scenerecog.run1.Run1;
-import uk.ac.soton.ecs.comp3204.scenerecog.run2.Run2;
-import uk.ac.soton.ecs.comp3204.scenerecog.run3.Run3;
+import uk.ac.soton.ecs.comp3204.scenerecog.run1.TinyImageClassification;
+import uk.ac.soton.ecs.comp3204.scenerecog.run2.BoVWClassification;
+import uk.ac.soton.ecs.comp3204.scenerecog.run3.PHoWClassification;
 
 /**
  * Runner for the Scene Recognition coursework. This will run all 3 recognisers.
@@ -51,22 +51,22 @@ public class App {
 
         try {
             // Run, Run1
-            run(new Run1(1), "1", datasets);
-            run(new Run1(3), "1-3", datasets);
-            run(new Run1(5), "1-5", datasets);
-            run(new Run1(11), "1-11", datasets);
+            run(new TinyImageClassification(1), "1", datasets);
+            run(new TinyImageClassification(3), "1-3", datasets);
+            run(new TinyImageClassification(5), "1-5", datasets);
+            run(new TinyImageClassification(11), "1-11", datasets);
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "IOException running classification run 1.", ex);
         }
         try {
             // Run, Run2
-            run(new Run2(BOVW_PATCH_SIZE, BOVW_PATCH_STEP, BOVW_PATCHES_PER_IMAGE, BOVW_K_MEANS), "2", datasets);
+            run(new BoVWClassification(BOVW_PATCH_SIZE, BOVW_PATCH_STEP, BOVW_PATCHES_PER_IMAGE, BOVW_K_MEANS), "2", datasets);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "IOException running classification run 2.", e);
         }
         try {
             // Run, Run3
-            run(new Run3(datasets), "3", datasets);
+            run(new PHoWClassification(), "3", datasets);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "IOException running classification run 3.", e);
         }

@@ -26,14 +26,14 @@ import uk.ac.soton.ecs.comp3204.scenerecog.AnnotatorWrapper;
 /**
  *
  */
-public class Run3AnnotationWrapper implements AnnotatorWrapper<LiblinearAnnotator<FImage, String>> {
+public class PHoWAnnotationWrapper implements AnnotatorWrapper<LiblinearAnnotator<FImage, String>> {
 
     private final PyramidDenseSIFT<FImage> pdsift;
     private final HomogeneousKernelMap homogeneousKM;
 
     private LiblinearAnnotator<FImage, String> annotator = null;
 
-    public Run3AnnotationWrapper() {
+    public PHoWAnnotationWrapper() {
         // Extract patches from image, patches are known as bin here.
         // Extract SIFT from patches.
         // Patches are size of 7 by 7 and every 3 pixels on x and y directions.

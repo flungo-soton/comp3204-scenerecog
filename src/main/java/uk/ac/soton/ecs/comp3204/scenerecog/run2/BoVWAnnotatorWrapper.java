@@ -20,7 +20,7 @@ import uk.ac.soton.ecs.comp3204.scenerecog.AnnotatorWrapper;
  * Custom annotation wrapper for Run 2 which deals with the more complex
  * requirements for training.
  */
-public class Run2AnnotatorWrapper implements AnnotatorWrapper<LiblinearAnnotator<FImage, String>> {
+public class BoVWAnnotatorWrapper implements AnnotatorWrapper<LiblinearAnnotator<FImage, String>> {
 
     private LiblinearAnnotator<FImage, String> annotator = null;
 
@@ -29,7 +29,7 @@ public class Run2AnnotatorWrapper implements AnnotatorWrapper<LiblinearAnnotator
     private final int patchPerImage;
     private final int kMeans;
 
-    public Run2AnnotatorWrapper(int patchSize, int patchStep, int patchPerImage, int kMeans) {
+    public BoVWAnnotatorWrapper(int patchSize, int patchStep, int patchPerImage, int kMeans) {
         this.patchSize = patchSize;
         this.patchStep = patchStep;
         this.patchPerImage = patchPerImage;
@@ -44,6 +44,12 @@ public class Run2AnnotatorWrapper implements AnnotatorWrapper<LiblinearAnnotator
         return annotator;
     }
 
+    /**
+     * Train the annotator. The first run will also train the hard assigner
+     * using the training set provided.
+     *
+     * @param training the data to train with.
+     */
     @Override
     public void train(GroupedDataset<String, ? extends ListDataset<FImage>, FImage> training) {
         if (annotator == null) {

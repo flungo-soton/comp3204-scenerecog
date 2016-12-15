@@ -6,7 +6,7 @@ import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 import uk.ac.soton.ecs.comp3204.scenerecog.App;
 import uk.ac.soton.ecs.comp3204.scenerecog.Classification;
 
-public class Run2 extends Classification<LiblinearAnnotator<FImage, String>> {
+public class BoVWClassification extends Classification<LiblinearAnnotator<FImage, String>> {
 
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
@@ -15,7 +15,7 @@ public class Run2 extends Classification<LiblinearAnnotator<FImage, String>> {
     private final int patchPerImage;
     private final int kMeans;
 
-    public Run2(int patchSize, int patchStep, int patchPerImage, int kMeans) {
+    public BoVWClassification(int patchSize, int patchStep, int patchPerImage, int kMeans) {
         this.patchSize = patchSize;
         this.patchStep = patchStep;
         this.patchPerImage = patchPerImage;
@@ -23,8 +23,8 @@ public class Run2 extends Classification<LiblinearAnnotator<FImage, String>> {
     }
 
     @Override
-    public Run2AnnotatorWrapper getAnnotatorWrapper() {
-        return new Run2AnnotatorWrapper(patchSize, patchStep, patchPerImage, kMeans);
+    public BoVWAnnotatorWrapper getAnnotatorWrapper() {
+        return new BoVWAnnotatorWrapper(patchSize, patchStep, patchPerImage, kMeans);
     }
 
 }

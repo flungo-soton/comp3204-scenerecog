@@ -11,15 +11,15 @@ import uk.ac.soton.ecs.comp3204.scenerecog.IncrementalAnnotatorWrapper;
 /**
  * Scene recognition classifier using KNN on tiny images.
  */
-public class Run1 extends Classification<KNNAnnotator<FImage, String, DoubleFV>> {
+public class TinyImageClassification extends Classification<KNNAnnotator<FImage, String, DoubleFV>> {
 
-    private static final Logger LOGGER = Logger.getLogger(Run1.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TinyImageClassification.class.getName());
 
     private static final String OUTPUT = "run1.txt";
 
     private int k;
 
-    public Run1(int k) {
+    public TinyImageClassification(int k) {
         this.k = k;
     }
 
