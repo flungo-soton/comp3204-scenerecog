@@ -4,7 +4,8 @@ import de.bwaldvogel.liblinear.SolverType;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
+
+import org.openimaj.data.RandomData;
 import org.openimaj.data.dataset.GroupedDataset;
 import org.openimaj.data.dataset.ListDataset;
 import org.openimaj.feature.DoubleFV;
@@ -24,6 +25,7 @@ public class Run2AnnotatorWrapper implements AnnotatorWrapper<LiblinearAnnotator
 
     private LiblinearAnnotator<FImage, String> annotator = null;
 
+    private static final int NUMOFFEATURES = 10;
     private final int patchSize;
     private final int patchStep;
 
@@ -61,13 +63,13 @@ public class Run2AnnotatorWrapper implements AnnotatorWrapper<LiblinearAnnotator
 
         // From all images, pick 10 random patches.
         Iterator itr = datasets.iterator();
-        Random random = new Random();
         while (itr.hasNext()) {
             FImage image = (FImage) itr.next();
             List<float[]> patches = BoVWExtractor.getPatches(image, patchSize, patchStep);
 
-            for (int i = 0; i < 10; i++) {
-                float[] patch = patches.get(random.nextInt(patches.size()));
+            int[] uniqueKeys = RandomData.getUniqueRandomInts(NUMOFFEATURES, 0, patches.size());
+            for (int i = 0; i < uniqueKeys.length; i++) {
+                float[] patch = patches.get(uniqueKeys[i]);
                 allPatches.add(patch);
             }
         }
